@@ -416,6 +416,13 @@ export default function ReservePage() {
                 })}
               </div>
 
+              {error && (
+                <div className="mt-4 mb-4 p-4 border border-red-200 bg-red-50 text-red-700 rounded-md flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4" />
+                  {error}
+                </div>
+              )}
+
               <div className="mt-6 flex justify-end">
                 <Button
                   onClick={handleSubmit}
@@ -437,12 +444,6 @@ export default function ReservePage() {
           </Card>
         )}
       </div>
-      {error && (
-        <div className="mt-4 mb-4 p-4 border border-red-200 bg-red-50 text-red-700 rounded-md flex items-center gap-2">
-          <AlertCircle className="h-4 w-4" />
-          {error}
-        </div>
-      )}
 
       {successMessage && (
         <div className="mt-4 mb-4 p-4 border border-green-200 bg-green-50 text-green-700 rounded-md flex items-center gap-2">
