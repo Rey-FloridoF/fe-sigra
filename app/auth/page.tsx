@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 interface LoginResponse {
   message: string;
@@ -48,16 +49,16 @@ export default function Login() {
       }
 
       const data: LoginResponse = await response.json();
-      
+
       // Guardar el token en localStorage
       localStorage.setItem("authToken", data.token);
-      
+
       // Redirigir al dashboard o página principal
       router.push("/dashboard");
-      
+
     } catch (error) {
       console.error("Error en login:", error);
-      
+
       if (error instanceof TypeError && error.message.includes("fetch")) {
         setError("No se puede conectar al servidor");
       } else if (error instanceof Error) {
@@ -88,7 +89,7 @@ export default function Login() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            
+
             <div className="space-y-2">
               <Label htmlFor="username">Usuario</Label>
               <Input
@@ -101,7 +102,7 @@ export default function Login() {
                 disabled={isLoading}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Contraseña</Label>
               <PasswordInput
@@ -120,15 +121,22 @@ export default function Login() {
                 <Label htmlFor="remember-me" className="text-sm font-normal">
                   Recordarme
                 </Label>
-              </div>          
+              </div>
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full" 
+            <Button
+              type="submit"
+              className="w-full flex items-center justify-center gap-2"
               disabled={isLoading}
             >
-              {isLoading ? "Iniciando..." : "Iniciar Sesión"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Iniciando...
+                </>
+              ) : (
+                "Iniciar Sesión"
+              )}
             </Button>
           </form>
         </CardContent>

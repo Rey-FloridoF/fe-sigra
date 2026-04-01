@@ -71,7 +71,7 @@ export default function MyReservationsPage() {
     const fechaMenu = new Date(Number(year), Number(month) - 1, Number(day))
     const limiteReserva = new Date(fechaMenu)
     limiteReserva.setDate(limiteReserva.getDate() - 1)
-    limiteReserva.setHours(18, 0, 0, 0)
+    limiteReserva.setHours(23, 0, 0, 0)
     const now = new Date()
     return now < limiteReserva
   }
