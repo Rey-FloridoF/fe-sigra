@@ -100,6 +100,8 @@ export default function ReportesPage() {
       setError(error instanceof Error ? error.message : 'No se pudo eliminar el reporte')
     } finally {
       setIsDeleteModalOpen(false)
+      setSuccessMessage('Reporte eliminado')
+      setTimeout(() => setSuccessMessage(null), 2000)
     }
   }
 

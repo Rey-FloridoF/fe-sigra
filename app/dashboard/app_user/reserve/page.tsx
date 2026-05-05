@@ -5,7 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { Loader2, Calendar, AlertCircle, Check, X } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog"
+import { Loader2, Calendar, AlertCircle, Check, X, Info } from "lucide-react"
 import { menuService, type MenuPlato } from "@/lib/api/menu"
 import { reservaService, type ReservaPlato } from "@/lib/api/reservas"
 
@@ -181,10 +188,38 @@ export default function ReservePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
-            Seleccionar Fecha
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="h-5 w-5" />
+              Seleccionar Fecha
+            </CardTitle>
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Info className="h-4 w-4" />
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2 text-black"><Info className="h-4 w-4" />Información importante</DialogTitle>
+                </DialogHeader>
+
+                <ul className="list-disc pl-5 space-y-2 text-sm">
+                  <li>
+                    Si el plato es <span className="text-xs bg-orange-200 text-orange-800 px-2 py-0.5 rounded">Obligatorio</span> no puede ni quitarlo de su elección, ni seleccionar la cantidad.
+                  </li>
+                  <li>
+                    La cantidad de un mismo plato no puede exceder en 2.
+                  </li>
+                  <li>
+                    Una vez hecha la reserva puede editarla o cancelarla antes de las 23:00 del día anterior a la fecha de la reserva.
+                  </li>
+                </ul>
+              </DialogContent>
+            </Dialog>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">

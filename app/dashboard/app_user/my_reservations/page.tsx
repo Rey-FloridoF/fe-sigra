@@ -21,16 +21,16 @@ export default function MyReservationsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  
+
   const [selectedReserva, setSelectedReserva] = useState<ReservaWithPlatos | null>(null)
   const [isViewModalOpen, setIsViewModalOpen] = useState(false)
-  
+
   const [editingReserva, setEditingReserva] = useState<ReservaWithPlatos | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [menuOpciones, setMenuOpciones] = useState<OpcionSeleccionada[]>([])
   const [isLoadingMenu, setIsLoadingMenu] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
+
   const [deleteReserva, setDeleteReserva] = useState<ReservaWithPlatos | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
@@ -102,7 +102,7 @@ export default function MyReservationsPage() {
           const nombrePlato = (plato.nombre || "").toLowerCase().trim()
           return nombreNormalizado === nombrePlato
         })
-        
+
         return {
           opcionId: plato.id!,
           cantidad: platoReservado?.cantidad || 0,
@@ -164,7 +164,7 @@ export default function MyReservationsPage() {
 
       setSuccessMessage("Reserva actualizada exitosamente")
       setTimeout(() => setSuccessMessage(null), 2000)
-      
+
       setIsEditModalOpen(false)
       loadReservas()
     } catch (err) {
@@ -191,7 +191,7 @@ export default function MyReservationsPage() {
 
       setSuccessMessage("Reserva cancelada exitosamente")
       setTimeout(() => setSuccessMessage(null), 2000)
-      
+
       setIsDeleteModalOpen(false)
       loadReservas()
     } catch (err) {
@@ -226,6 +226,20 @@ export default function MyReservationsPage() {
           {successMessage}
         </div>
       )}
+
+      <Card className="mb-6 border-orange-300 bg-orange-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-black">
+            <AlertCircle className="h-5 w-5 text-black" />
+            Advertencia
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-black">
+            Las reservaciones solo pueden ser editadas o canceladas antes de las 23:00 del día anterior a la reserva.
+          </p>
+        </CardContent>
+      </Card>
 
       {isLoading ? (
         <div className="flex justify-center py-12">
@@ -318,30 +332,30 @@ export default function MyReservationsPage() {
           </DialogHeader>
           <div className="overflow-y-auto overflow-x-auto max-h-[60vh]">
             <div className="space-y-3">
-            {selectedReserva?.platos?.map((plato, idx) => (
-              <div key={idx} className="flex justify-between items-center p-3 border rounded-lg">
-                <div>
-                  <p className="font-medium">{plato.nombre}</p>
-                  {!plato.elegible && (
-                    <span className="text-xs bg-orange-200 text-orange-800 px-2 py-0.5 rounded">
-                      Obligatorio
-                    </span>
-                  )}
+              {selectedReserva?.platos?.map((plato, idx) => (
+                <div key={idx} className="flex justify-between items-center p-3 border rounded-lg">
+                  <div>
+                    <p className="font-medium">{plato.nombre}</p>
+                    {!plato.elegible && (
+                      <span className="text-xs bg-orange-200 text-orange-800 px-2 py-0.5 rounded">
+                        Obligatorio
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-bold">x{plato.cantidad}</div>
+                    <div className="text-sm text-muted-foreground">${plato.precio?.toFixed(2)}</div>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold">x{plato.cantidad}</div>
-                  <div className="text-sm text-muted-foreground">${plato.precio?.toFixed(2)}</div>
+              ))}
+              {selectedReserva && (
+                <div className="flex justify-end pt-3 border-t">
+                  <span className="text-lg font-bold">
+                    Total: ${selectedReserva.precioTotal?.toFixed(2) || '0.00'}
+                  </span>
                 </div>
-              </div>
-            ))}
-            {selectedReserva && (
-              <div className="flex justify-end pt-3 border-t">
-                <span className="text-lg font-bold">
-                  Total: ${selectedReserva.precioTotal?.toFixed(2) || '0.00'}
-                </span>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -369,19 +383,18 @@ export default function MyReservationsPage() {
                 {menuOpciones.map((opcion) => {
                   const plato = editingReserva?.platos?.find(p => {
                     const nombreNormalizado = (p.nombre || "").toLowerCase().trim()
-                    const nombrePlato = (menuOpciones.find(m => m.opcionId === opcion.opcionId)?.elegible ? "elegible" : "") 
+                    const nombrePlato = (menuOpciones.find(m => m.opcionId === opcion.opcionId)?.elegible ? "elegible" : "")
                     return true
                   })
                   return (
                     <div
                       key={opcion.opcionId}
-                      className={`p-4 border rounded-lg ${
-                        opcion.elegible
-                          ? opcion.activo
-                            ? "border-green-500 bg-green-50"
-                            : "border-gray-200"
-                          : "border-orange-300 bg-orange-50"
-                      }`}
+                      className={`p-4 border rounded-lg ${opcion.elegible
+                        ? opcion.activo
+                          ? "border-green-500 bg-green-50"
+                          : "border-gray-200"
+                        : "border-orange-300 bg-orange-50"
+                        }`}
                     >
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex-1">
@@ -404,14 +417,12 @@ export default function MyReservationsPage() {
                               type="button"
                               onClick={() => handleToggleActivo(opcion.opcionId)}
                               disabled={!opcion.elegible}
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                                opcion.activo ? "bg-green-600" : "bg-gray-300"
-                              } ${!opcion.elegible ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${opcion.activo ? "bg-green-600" : "bg-gray-300"
+                                } ${!opcion.elegible ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                             >
                               <span
-                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                  opcion.activo ? "translate-x-6" : "translate-x-1"
-                                }`}
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${opcion.activo ? "translate-x-6" : "translate-x-1"
+                                  }`}
                               />
                             </button>
                           </div>

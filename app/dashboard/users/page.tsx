@@ -355,7 +355,7 @@ export default function UsersPage() {
                       id="password"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      placeholder="Ej: password123"
+                      placeholder="Ej: Password123"
                       required
                       disabled={isSubmitting}
                     />
