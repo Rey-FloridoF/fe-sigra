@@ -396,7 +396,7 @@ export default function UsersPage() {
                 Confirmar Eliminación
               </DialogTitle>
               <DialogDescription>
-                ¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.
+                ¿Estás seguro de que deseas eliminar este usuario? Si el usuario tiene reservas realizadas se desactivará su cuenta sino se eliminara completamente de la base de datos.
               </DialogDescription>
             </DialogHeader>
             <div className="flex justify-end space-x-2 pt-4">
