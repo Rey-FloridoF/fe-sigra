@@ -27,7 +27,7 @@ import {
   FileTextIcon,
   History,
 } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 
 // Función para decodificar el token JWT
 export function parseJwt(token: string) {
@@ -53,6 +53,7 @@ export function Navbar() {
   const [user, setUser] = useState<{ name: string; role: string } | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     // Verificar autenticación
@@ -107,25 +108,25 @@ export function Navbar() {
 
   const navigation = user?.role === "ADMIN"
     ? [
-        { name: "Inicio", href: "/dashboard", icon: Home },
-        { name: "Usuarios", href: "/dashboard/users", icon: Users2Icon },
-        { name: "Departamentos", href: "/dashboard/departament", icon: Building2Icon },
-        { name: "Platos", href: "/dashboard/dishe", icon: UtensilsCrossedIcon },
-        { name: "Menús", href: "/dashboard/menu", icon: ClipboardListIcon },
-        { name: "Reservaciones", href: "/dashboard/reservations", icon: CalendarCheck },
-        { name: "Reportes", href: "/dashboard/reports", icon: FileTextIcon },
-      ]
+      { name: "Inicio", href: "/dashboard", icon: Home },
+      { name: "Usuarios", href: "/dashboard/users", icon: Users2Icon },
+      { name: "Departamentos", href: "/dashboard/departament", icon: Building2Icon },
+      { name: "Platos", href: "/dashboard/dishe", icon: UtensilsCrossedIcon },
+      { name: "Menús", href: "/dashboard/menu", icon: ClipboardListIcon },
+      { name: "Reservaciones", href: "/dashboard/reservations", icon: CalendarCheck },
+      { name: "Reportes", href: "/dashboard/reports", icon: FileTextIcon },
+    ]
     : [
-        { name: "Inicio", href: "/dashboard", icon: Home },
-        { name: "Reservar", href: "/dashboard/app_user/reserve", icon: CalendarPlus },
-        { name: "Mis reservaciones", href: "/dashboard/app_user/my_reservations", icon: CalendarCheck },
-        { name: "Historial", href: "/dashboard/app_user/historial", icon: History },
-      ]
+      { name: "Inicio", href: "/dashboard", icon: Home },
+      { name: "Reservar", href: "/dashboard/app_user/reserve", icon: CalendarPlus },
+      { name: "Mis reservaciones", href: "/dashboard/app_user/my_reservations", icon: CalendarCheck },
+      { name: "Historial", href: "/dashboard/app_user/historial", icon: History },
+    ]
 
   if (!user) {
     return (
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto max-w-6xl flex h-16 items-center justify-between px-4">
+        <div className="container mx-auto max-w-6xl flex h-16 items-center justify-between px-4">
           <Link href="/dashboard" className="flex items-center space-x-2">
             <Image
               src="/logo_sigra.png"
@@ -135,7 +136,7 @@ export function Navbar() {
               className="h-10 w-auto"
             />
           </Link>
-        <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2">
             <span className="text-sm text-muted-foreground">Cargando...</span>
           </div>
         </div>
@@ -162,11 +163,12 @@ export function Navbar() {
           <nav className="flex items-center space-x-2">
             {navigation.map((item) => {
               const Icon = item.icon
+              const isActive = pathname === item.href
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="flex items-center space-x-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                  className={`flex items-center space-x-2 text-sm font-medium transition-colors ${isActive ? "text-primary font-semibold" : "text-muted-foreground hover:text-primary"}`}
                 >
                   <Icon className="h-4 w-4" />
                   <span>{item.name}</span>
@@ -178,27 +180,27 @@ export function Navbar() {
           {/* User Menu */}
           <div className="flex items-center">
             <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src="" alt={user.name} />
-                  <AvatarFallback>
-                    <User className="h-5 w-5" />
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
-              <div className="flex items-center justify-start gap-2 p-2">
-                <div className="flex flex-col space-y-1 leading-none">
-                  <p className="font-medium">Hola, {user.name}</p>                  
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src="" alt={user.name} />
+                    <AvatarFallback>
+                      <User className="h-5 w-5" />
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <div className="flex items-center justify-start gap-2 p-2">
+                  <div className="flex flex-col space-y-1 leading-none">
+                    <p className="font-medium">Hola, {user.name}</p>
+                  </div>
                 </div>
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Cerrar sesión</span>
-              </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Cerrar sesión</span>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -227,12 +229,13 @@ export function Navbar() {
                 <nav className="flex flex-col space-y-3">
                   {navigation.map((item) => {
                     const Icon = item.icon
+                    const isActive = pathname === item.href
                     return (
                       <Link
                         key={item.name}
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="flex items-center space-x-3 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                        className={`flex items-center space-x-2 text-sm font-medium transition-colors ${isActive ? "text-primary font-semibold" : "text-muted-foreground hover:text-primary"}`}
                       >
                         <Icon className="h-5 w-5" />
                         <span>{item.name}</span>
@@ -242,7 +245,7 @@ export function Navbar() {
                 </nav>
                 <div className="pt-4 border-t">
                   <p className="font-medium">Hola, {user.name}</p>
-                  
+
                   <Button
                     onClick={() => {
                       setMobileMenuOpen(false)
@@ -256,9 +259,9 @@ export function Navbar() {
                   </Button>
                 </div>
               </div>
-              </SheetContent>
-            </Sheet>
-          </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   )
